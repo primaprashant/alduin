@@ -1,0 +1,24 @@
+[project]
+name = "alduin"
+version = "0.1.0"
+description = "🐉 Alduin - Your Personal CLI Coding Agent"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=0.79.0",
+    "python-dotenv>=1.2.1",
+    "rich>=14.3.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "ruff>=0.15.1",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "W", "TID", "PTH", "Q"]

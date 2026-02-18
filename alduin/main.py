@@ -10,6 +10,51 @@ from rich.console import Console
 from alduin import llm, schema_converter, system_prompt, theme, tool, ui
 
 
+def execute_tool(
+    name_of_tool_to_execute: str,
+    tools_lookup_table: dict[str, Any],
+    args: Any,
+    console: Console,
+) -> str:
+    # get the tool function to execute
+    tool_fn = tools_lookup_table.get(name_of_tool_to_execute)
+
+    # does the tool requested by llm exist?
+    if not tool_fn:
+        error_msg = f"Error: unknown tool {name_of_tool_to_execute}"
+        ui.print_tool_error(
+            console=console,
+            name=name_of_tool_to_execute,
+            error=error_msg,
+        )
+        return error_msg
+    
+    ui.print_tool_request(
+        console=console,
+        name=name_of_tool_to_execute,
+        args=args,
+    )
+
+    # execute tool
+    try:
+        result = tool_fn(**args)
+        ui.print_tool_result(
+            console=console,
+            name=name_of_tool_to_execute,
+            result=result,
+        )
+        # return the response back
+        return result
+    except Exception as ex:
+        error_msg = f"Error: callling tool {name_of_tool_to_execute}\n{ex}"
+        ui.print_tool_error(
+            console=console,
+            name=name_of_tool_to_execute,
+            error=error_msg,
+        )
+        return error_msg
+
+
 def agent_loop(client: anthropic.Anthropic, console: Console) -> None:
     """Run the main agent loop: read input, call LLM, execute tools, repeat.
 
@@ -21,6 +66,7 @@ def agent_loop(client: anthropic.Anthropic, console: Console) -> None:
     conversation: list[dict[str, Any]] = []
 
     active_tools = [tool.read_file]
+    tools_lookup = {t.__name__: t for t in active_tools}
 
     while True:
         try:
@@ -59,7 +105,12 @@ def agent_loop(client: anthropic.Anthropic, console: Console) -> None:
                     output_tokens=llm_response.usage.output_tokens,
                 )
             elif block.type == "tool_use":
-                print(f"tool use requested for tool: {block.name} with args: {block.input}")
+                result = execute_tool(
+                    name_of_tool_to_execute=block.name,
+                    tools_lookup_table=tools_lookup,
+                    args=block.input,
+                    console=console,
+                )
 
 
 def main() -> None:

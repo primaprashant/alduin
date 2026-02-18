@@ -65,7 +65,7 @@ def agent_loop(client: anthropic.Anthropic, console: Console) -> None:
 
     conversation: list[dict[str, Any]] = []
 
-    active_tools = [tool.read_file, tool.list_files]
+    active_tools = [tool.read_file, tool.list_files, tool.edit_file]
     tools_lookup = {t.__name__: t for t in active_tools}
 
     while True:

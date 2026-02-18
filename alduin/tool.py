@@ -40,7 +40,35 @@ def edit_file(path: str, old_str: str, new_str: str) -> str:
         A success message, or an error message if it fails.
     """
 
-    pass
+    p = Path(path).resolve()
+
+    if not str(p).startswith(str(Path.cwd())):
+        return f"Error: requested file {p} is outside the current working directory"
+    
+    if not old_str:
+        if p.is_file() and p.read_text():
+            return f"Erros: requested file {p} exists and is non-empty. Provide old_str to edit the file."
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(new_str)
+        return f"Success: created file {p}"
+    
+    if not p.is_file():
+        return f"Error: file not found {p}"
+    
+    contents = p.read_text()
+
+    count_old_str = contents.count(old_str)
+
+    if count_old_str == 0:
+        return "Error: Provided old_str doesn't exist in the file"
+    
+    if count_old_str > 1:
+        return f"Error: old_str is not unique in the file, exists {count_old_str} time. Provide a unique string to edit the file"
+    
+    p.write_text(contents.replace(old_str, new_str, 1))
+
+    return f"Success: Edited {p}"
+
 
 
 def list_files(path: str) -> str:

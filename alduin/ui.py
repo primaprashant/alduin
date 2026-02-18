@@ -206,6 +206,7 @@ def print_error(console: Console, message: str) -> None:
         console: The Rich Console to print to.
         message: The error message to display.
     """
+
     console.print(
         Panel(
             Text(message, style=theme.ERROR_TEXT_STYLE),
@@ -215,3 +216,28 @@ def print_error(console: Console, message: str) -> None:
             padding=(0, 1),
         )
     )
+
+
+def confirm(console: Console, message: str) -> bool:
+    """Show a confirmation prompt and return True if the user approves.
+
+    Args:
+        console: The Rich Console to print to.
+        message: The message to display before the prompt.
+    """
+
+    console.print(
+        Panel(
+            Text(message, style=theme.TOOL_NAME_STYLE),
+            title="[tool]⚡ Confirmation[/tool]",
+            title_align="left",
+            border_style=theme.TOOL_BORDER,
+            padding=(0, 1),
+        )
+    )
+    try:
+        answer = input("Allow? [y/N]: ").strip().lower()
+    except (KeyboardInterrupt, EOFError):
+        return False
+    return answer in ("y", "yes")
+

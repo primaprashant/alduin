@@ -65,7 +65,7 @@ def agent_loop(client: anthropic.Anthropic, console: Console) -> None:
 
     conversation: list[dict[str, Any]] = []
 
-    active_tools = [tool.read_file]
+    active_tools = [tool.read_file, tool.list_files]
     tools_lookup = {t.__name__: t for t in active_tools}
 
     while True:
@@ -84,33 +84,55 @@ def agent_loop(client: anthropic.Anthropic, console: Console) -> None:
         ui.clear_previous_line()
         ui.print_user_message(console, user_input)
 
-        # make call to the llm api
-        llm_response = llm.call(
-            client=client,
-            console=console,
-            system_prompt=system_prompt.get(),
-            messages=conversation,
-            tool_schemas=schema_converter.generate_tool_schema(active_tools),
-        )
+        while True:
+            # make call to the llm api
+            llm_response = llm.call(
+                client=client,
+                console=console,
+                system_prompt=system_prompt.get(),
+                messages=conversation,
+                tool_schemas=schema_converter.generate_tool_schema(active_tools),
+            )
 
-        conversation.append({"role": "assistant", "content": llm_response.content})
+            conversation.append({"role": "assistant", "content": llm_response.content})
 
-        # display llm response
-        for block in llm_response.content:
-            if block.type == "text":
-                ui.print_assistant_reply(
-                    console=console,
-                    text=block.text,
-                    input_tokens=llm_response.usage.input_tokens,
-                    output_tokens=llm_response.usage.output_tokens,
-                )
-            elif block.type == "tool_use":
-                result = execute_tool(
-                    name_of_tool_to_execute=block.name,
-                    tools_lookup_table=tools_lookup,
-                    args=block.input,
-                    console=console,
-                )
+            tool_results = []
+
+            # display llm response
+            for block in llm_response.content:
+                if block.type == "text":
+                    ui.print_assistant_reply(
+                        console=console,
+                        text=block.text,
+                        input_tokens=llm_response.usage.input_tokens,
+                        output_tokens=llm_response.usage.output_tokens,
+                    )
+                elif block.type == "tool_use":
+                    result = execute_tool(
+                        name_of_tool_to_execute=block.name,
+                        tools_lookup_table=tools_lookup,
+                        args=block.input,
+                        console=console,
+                    )
+                    tool_results.append(
+                        {
+                            "type": "tool_result",
+                            "tool_use_id": block.id,
+                            "content": result,
+                        }
+                    )
+
+            if not tool_results:
+                break
+
+            conversation.append(
+                {
+                    "role": "user",
+                    "content": tool_results,
+                }
+            )
+
+            
 
 
 def main() -> None:

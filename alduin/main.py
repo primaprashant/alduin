@@ -7,7 +7,7 @@ import anthropic
 import dotenv
 from rich.console import Console
 
-from alduin import llm, system_prompt, theme, ui
+from alduin import llm, schema_converter, system_prompt, theme, tool, ui
 
 
 def agent_loop(client: anthropic.Anthropic, console: Console) -> None:
@@ -19,6 +19,8 @@ def agent_loop(client: anthropic.Anthropic, console: Console) -> None:
     """
 
     conversation: list[dict[str, Any]] = []
+
+    active_tools = [tool.read_file]
 
     while True:
         try:
@@ -36,28 +38,28 @@ def agent_loop(client: anthropic.Anthropic, console: Console) -> None:
         ui.clear_previous_line()
         ui.print_user_message(console, user_input)
 
-        # import the call method from the llm module
         # make call to the llm api
-
         llm_response = llm.call(
             client=client,
             console=console,
             system_prompt=system_prompt.get(),
             messages=conversation,
-            tool_schemas=[],
+            tool_schemas=schema_converter.generate_tool_schema(active_tools),
         )
 
         conversation.append({"role": "assistant", "content": llm_response.content})
 
         # display llm response
-
         for block in llm_response.content:
-            ui.print_assistant_reply(
-                console=console,
-                text=block.text,
-                input_tokens=llm_response.usage.input_tokens,
-                output_tokens=llm_response.usage.output_tokens,
-            )
+            if block.type == "text":
+                ui.print_assistant_reply(
+                    console=console,
+                    text=block.text,
+                    input_tokens=llm_response.usage.input_tokens,
+                    output_tokens=llm_response.usage.output_tokens,
+                )
+            elif block.type == "tool_use":
+                print(f"tool use requested for tool: {block.name} with args: {block.input}")
 
 
 def main() -> None:

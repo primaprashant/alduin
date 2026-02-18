@@ -7,7 +7,7 @@ import anthropic
 import dotenv
 from rich.console import Console
 
-from alduin import theme, ui
+from alduin import llm, system_prompt, theme, ui
 
 
 def agent_loop(client: anthropic.Anthropic, console: Console) -> None:
@@ -36,11 +36,28 @@ def agent_loop(client: anthropic.Anthropic, console: Console) -> None:
         ui.clear_previous_line()
         ui.print_user_message(console, user_input)
 
-        assistant_reply = (
-            "Krosis. That knowledge cannot be known to me. "
-            "Even the Firstborn of Akatosh has limits. Very few. But they exist."
+        # import the call method from the llm module
+        # make call to the llm api
+
+        llm_response = llm.call(
+            client=client,
+            console=console,
+            system_prompt=system_prompt.get(),
+            messages=conversation,
+            tool_schemas=[],
         )
-        ui.print_assistant_reply(console=console, text=assistant_reply, input_tokens=0, output_tokens=0)
+
+        conversation.append({"role": "assistant", "content": llm_response.content})
+
+        # display llm response
+
+        for block in llm_response.content:
+            ui.print_assistant_reply(
+                console=console,
+                text=block.text,
+                input_tokens=llm_response.usage.input_tokens,
+                output_tokens=llm_response.usage.output_tokens,
+            )
 
 
 def main() -> None:

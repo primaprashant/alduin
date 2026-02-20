@@ -167,6 +167,10 @@ We should see something like: `tool use requested for tool: read_file with args:
 
 Check the reference implementation for this phase: https://github.com/primaprashant/alduin/commit/c3c1e51fa8058d3b140cc9cace11eae1e3a16bbb
 
+After implementing this phase, the agent interaction should look something like this:
+
+![Agent loop with read_file tool](images/phase-2.gif)
+
 ---
 
 ## Phase 3: Tool Execution

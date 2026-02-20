@@ -302,6 +302,10 @@ Then:
 
 Check the reference implementation for this phase: https://github.com/primaprashant/alduin/commit/536c2e7b3f45fce2e1e124202ad6a3d8ca4bb444
 
+After implementing this phase, the agent interaction should look something like this:
+
+![Agent loop with edit_file tool](images/phase-5.gif)
+
 ---
 
 ## Phase 6: Bash Tool

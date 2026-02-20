@@ -126,6 +126,10 @@ The second question should work because the LLM remembers context.
 
 Check the reference implementation for this phase: https://github.com/primaprashant/alduin/commit/4b659c92aa0f9d974e687ddf2cccd351378cfbd4
 
+After implementing this phase, the agent interaction should look something like this:
+
+![Agent loop with LLM](images/phase-1.gif)
+
 ---
 
 ## Phase 2: Read File Tool

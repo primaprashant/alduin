@@ -8,6 +8,8 @@ The final phase is aspirational: we use the agent we just built to build itself,
 
 By the end we'll have a working coding agent we built ourselves and understand completely. The instructions at the end show how to install it as a global CLI tool so that we can use it on any codebase on our machine.
 
+**Before starting: disable all AI assistance in your code editor.** Turn off GitHub Copilot, AI-powered autocomplete, and any other AI coding tools. Type every line yourself.
+
 **What we're implementing:**
 
 1. **LLM in the loop**: replace the canned response with an actual LLM call
@@ -23,6 +25,10 @@ By the end we'll have a working coding agent we built ourselves and understand c
 ![CLI Coding Agent Architecture](images/cli-coding-agent-architecture.svg)
 
 ## Setup
+
+### 0. Disable AI assistance in your editor
+
+Turn off GitHub Copilot and any other AI-powered coding tools before you start. This workshop is about understanding every line you write. If AI autocomplete is filling in the code for you, you'll finish faster but learn nothing. Using AI assistance to write the code here would defeat the purpose of the exercise.
 
 ### 1. Install uv
 

@@ -212,6 +212,10 @@ We'll see the file contents displayed as a tool result, but that's it. The resul
 
 Check the reference implementation for this phase: https://github.com/primaprashant/alduin/commit/be73644c49eeb529cb8b211538ccb23660ff7868
 
+After implementing this phase, the agent interaction should look something like this:
+
+![Agent loop with read_file tool execution](images/phase-3.gif)
+
 ---
 
 ## Phase 4: The Agent Loop

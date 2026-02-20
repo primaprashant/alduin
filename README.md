@@ -259,6 +259,10 @@ Watch it call `list_files`, then `read_file` on each file, then produce a summar
 
 Check the reference implementation for this phase: https://github.com/primaprashant/alduin/commit/9ff401d2cd72b490a946ed60336204be87fd03d2
 
+After implementing this phase, the agent interaction should look something like this:
+
+![Agent loop with llm - tool call loop](images/phase-4.gif)
+
 ---
 
 ## Phase 5: Edit File Tool

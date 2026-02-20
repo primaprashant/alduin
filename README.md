@@ -71,7 +71,9 @@ make check-api-key
 alias ald='uv run --no-sync python -m alduin.main'
 ```
 
-Run `ald` to start the agent. Right now it only shows a canned response. We'll fix that.
+Run `ald` to start the agent. Right now it only shows a canned response. If we run the agent at this stage, we should something like this:
+
+![Agent loop without LLM](images/phase-0.gif)
 
 ---
 

@@ -342,6 +342,10 @@ After implementing this phase, the agent interaction should look something like 
 
 Check the reference implementation for this phase: https://github.com/primaprashant/alduin/commit/83771b2ec67fb87b23dfc87af8370654739ea2d8
 
+After implementing this phase, the agent interaction should look something like this:
+
+![Agent loop with bash tool](images/phase-6.gif)
+
 We've built a coding agent! The same core architecture (an LLM in a loop with tools) is what powers Claude Code, Cursor, Codex, and every other coding agent.
 
 ---

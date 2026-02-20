@@ -28,7 +28,7 @@ def execute_tool(
             error=error_msg,
         )
         return error_msg
-    
+
     ui.print_tool_request(
         console=console,
         name=name_of_tool_to_execute,
@@ -65,7 +65,7 @@ def agent_loop(client: anthropic.Anthropic, console: Console) -> None:
 
     conversation: list[dict[str, Any]] = []
 
-    active_tools = [tool.read_file, tool.list_files, tool.edit_file]
+    active_tools = [tool.read_file, tool.list_files, tool.edit_file, tool.bash]
     tools_lookup = {t.__name__: t for t in active_tools}
 
     while True:
@@ -131,8 +131,6 @@ def agent_loop(client: anthropic.Anthropic, console: Console) -> None:
                     "content": tool_results,
                 }
             )
-
-            
 
 
 def main() -> None:
